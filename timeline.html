@@ -1,0 +1,274 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Filipinos in American Films</title>
+  <script src="vis/dist/vis.js"></script>
+  <link href="vis/dist/vis.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="timeline.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="script.js"></script>
+  <style type="text/css">
+    body, html {
+      font-family: sans-serif;
+    }
+  </style>
+
+</head>
+<body>
+<h1 id="header">History of Filipinos in American Films and TV Shows</h1>
+
+<div id="visualization"></div>
+<script type="text/javascript">
+  var tag = document.createElement('script');
+  var loaded = false;
+  // DOM element where the Timeline will be attached
+  var container = document.getElementById('visualization');
+  // Create a DataSet (allows two way data-binding)
+  var items = new vis.DataSet([
+    {
+        id: 1,
+        content: "<p class=title>The Real Glory(1939)</p>" +
+                 "<img class=thumbnail src=img/TheRealGlory.jpg>",
+        start: "1939"
+    },
+    {
+        id: 2,
+        content: "<p class=title>Bataan(1943)</p>" +
+                 "<img class=thumbnail src=img/Bataan.jpeg>",
+        start: "1943"
+    },
+    {
+        id: 3,
+        content: "<p class=title>Back To Bataan(1945)</p>" +
+                 "<img class=thumbnail src=img/BackToBataan.jpg>",
+        start: "1945"
+    },
+    {
+        id: 4,
+        content: "<p class=title>Reflections In A Golden Eye(1967)</p>" +
+                 "<img class=thumbnail src=img/ReflectionsInAGoldenEye.jpg>",
+        start: "1967"
+    },
+    {
+        id: 5,
+        content: "<p class=title>Star Trek: The Motion Picture(1979)</p>" +
+                 "<img class=thumbnail src=img/StarTrekTheMotionPicture.png>",
+        start: "1979"
+    },
+    {
+        id: 6,
+        content: "<p class=title>Barney And Friends(1992 - 1996)</p>" +
+                 "<img class=thumbnail src=img/BarneyAndFriends.jpg>",
+        start: "1992",
+    },
+    {
+        id: 7,
+        content: "<p class=title>Starship Troopers(1997)</p>" +
+                 "<img class=thumbnail src=img/StarshipTroopers.jpg>",
+        start: "1997"
+    },
+    {
+        id: 8,
+        content: "<p class=title>City Guys(1997 - 2001)</p>" +
+                 "<img class=thumbnail src=img/CityGuys.jpg>",
+        start: "1997"
+    },
+    {
+        id: 9,
+        content: "<p class=title>The Debut(2000)</p>" +
+                 "<img class=thumbnail src=img/TheDebut.jpg>",
+        start: "2000"
+    },
+    {
+        id: 10,
+        content: "<p class=title>The Flip Side(2001)</p>",
+        start: "2001"
+    },
+    {
+        id: 11,
+        content: "<p class=title>Degrassi:<br> The Next Generation(2001 - 2010)</p>" +
+                 "<img class=thumbnail src=img/DegrassiTNG.PNG>",
+        start: "2001"
+    },
+    {
+        id: 12,
+        content: "<p class=title>Slow Jam King(2004)</p>" +
+                 "<img class=thumbnail src=img/SlowJamKing.jpg>",
+        start: "2004"
+    },
+    {
+        id: 13,
+        content: "<p class=title>The Great Raid(2005)</p>" +
+                 "<img class=thumbnail src=img/TheGreatRaid.jpg>",
+        start: "2005"
+    },
+    {
+        id: 14,
+        content: "<p class=title>Glee(2009 - 2015)</p>" +
+                 "<img class=thumbnail src=img/Glee.png>",
+        start: "2009"
+    },
+    {
+        id: 15,
+        content: "<p class=title>Pretty Little Liars(2010 - Present)</p>" +
+                 "<img class=thumbnail src=img/PrettyLittleLiars.jpg>",
+        start: "2010"
+    },
+    {
+        id: 16,
+        content: "<p class=title>Grimm(2011 - Present)</p>" +
+                 "<img class=thumbnail src=img/Grimm.jpg>",
+        start: "2011"
+    },
+    {
+        id: 17,
+        content: "<p class=title>Superstore(2015 - Present)</p>" +
+                 "<img class=thumbnail src=img/superstore.jpg>",
+        start: "2015"
+    },
+    {
+        id: 18,
+        content: "<p class=title>Crazy Ex-Girlfriend(2015 - Present)</p>" +
+                 "<img class=thumbnail src=img/CrazyExGirlfriend.jpg>",
+        start: "2015"
+    }
+  ]);
+
+  // Configuration for the Timeline
+  var options = {
+      orientation: "top",
+      height: 400,
+      start: "1935",
+      end: "1955",
+      max: "2020",
+      min: "1930",
+      showCurrentTime: false
+  };
+
+  // Create a Timeline
+  var timeline = new vis.Timeline(container, items, options);
+
+  var vidId, vidStart, curr;
+  function onClick(properties){
+      if(properties.what == "background" || properties.what == null){
+          window.scrollTo(0,0);
+      }else{
+          setIdAndStart(properties.item);
+          curr = properties.item;
+          playVideo(vidId, vidStart);
+      }
+  }
+
+  var title, year;
+  function setIdAndStart(item){
+      var data = items._data;
+      var entry = data[item];
+      title = extractTitle(entry["content"]);
+      year = entry["start"];
+      vidId = videos[title][0];
+      vidStart = videos[title][1];
+  }
+
+  function extractTitle(content){
+      var pos = content.indexOf(">");
+      var last = content.indexOf(")<");
+      var ret = content.substring(pos + 1, last + 1);
+      return ret;
+  }
+
+  var player;
+  function onYouTubeIframeAPIReady(){
+      player = new YT.Player('player', {
+          height: '390',
+          width: '640',
+          events:{
+              'onReady': onPlayerReady
+          },
+          playerVars:{
+              'controls': 1
+          }
+      });
+      loaded = true;
+      document.getElementById('player').scrollIntoView();
+      document.getElementById('list').style.display = 'inline';
+      document.getElementById('info').style.display = 'inline';
+      window.scrollTo(0,document.body.scrollHeight);
+  }
+
+  function setInfo(){
+      document.getElementById('medTitle').innerHTML = title.substring(0, title.indexOf("("));
+      document.getElementById('medYear').innerHTML = year;
+      document.getElementById('medType').innerHTML = videos[title][2];
+      document.getElementById('medDesc').innerHTML = videos[title][3];
+      document.getElementById('medInfo').innerHTML = videos[title][4];
+  }
+
+  function onPlayerReady(event){
+      player.cueVideoById(vidId, vidStart);
+  }
+
+  timeline.on('click', onClick);
+
+  function playVideo(vidId, vidStart){
+      var isIMG = vidId.indexOf("<img src");
+      setInfo();
+      document.getElementById('player').style.display = 'block';
+      if(vidId !== undefined && vidId !== "" && loaded == false && isIMG == -1){
+          tag.src = "https://www.youtube.com/iframe_api";
+          var firstScriptTag = document.getElementsByTagName('script')[0];
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      }else if(vidId !== undefined && vidId !== "" && loaded == true && isIMG == -1){
+          player.cueVideoById(vidId, vidStart);
+          document.getElementById('player').scrollIntoView();
+      }else{
+          document.getElementById('player').style.display = 'none';
+      }
+      timeline.moveTo(year);
+  }
+
+  var videos = {
+      "The Real Glory(1939)": ["hJYqoHwzGDM", 0, "Film", "Miguel, Alipang, Moros, Philippine Constabulary", "This movie was highly criticized by President Manuel Quezon for its portrayal of Moros as bloodthirsty savages as well as the portrayal of Filipinos as cowards."],
+      "Bataan(1943)": ["I1r_Q2HAstA", 0, "Film", "Private \"Yankee\" Salazar, Corporal Juan Katigbak", "Filipinos in this movie were not portrayed as bloodthirsty and cowards. The problem however, is that despite the Philippines being 4 years away from their independence, the movie doesn't portray it as such. It portrays the Philippines as being dependent upon the US."],
+      "Back To Bataan(1945)": ["g9mgHN26V_o", 0, "Film", "Captain Andres Bonifacio, Maximo Cuenca", "In this film, a Filipino, Andres Bonifacio, is actually in the center of the action. Just like Bataan, however, it falls prey to potraying Filipinos as inferior and too dependent upon the US."],
+      "Reflections In A Golden Eye(1967)": ["sFZTGloFss0", 0, "Film", "Anacleto", "In this movie, Anacleto, played by Zorro David, is an effeminate houseboy described by TCM as having an \"almost pathological devotion to Mrs. Langdon.\". The scene on the right shows his wonderful acting skills."],
+      "Star Trek: The Motion Picture(1979)": ["PPUdrMzvxrc", 0, "Film", "Hikaru Sulu", "Perhaps not many people will know that Hikaru Sulu is of mixed decent. I didn't. He actually got his last name from Sulu province in the Philippines."],
+      "Barney And Friends(1992 - 1996)": ["gxDRftW6-EU", 0, "TV", "Min", "Come to think of it, I don't remember the last time I, or anyone I know, sang Happy Birthday in Tagalog. For long as I can remember, I've always sung it in English."],
+      "Starship Troopers(1997)": ["ji7fiMU2s-k", 0, "Film", "Johnny Rico", "In the movie, Johnny Rico is said to be from Buenos Aires. However, in the original novel, he actually is Filipino"],
+      "City Guys(1997 - 2001)": ["mcTccRjbdGc", 480, "TV", "Alberto \"Al Rocket\" Ramos", ""],
+      "The Debut(2000)": ["EHeLAYmRfkM", 0, "Film", "Ben Mercado", "This film shows how Filipinos would try to negotiate their identity as another, then being misrecognized as anything but Filipino, then finally reclaiming the Filipino identity. Ben wanting to be more white and Gusto, Ben's love interest's ex boyfriend, wanting to be black portrays how Filipinos would negotiate their identities between either white or black."],
+      "The Flip Side(2001)": ["<img src=img/SlowJamKing.jpg height=390 width=640>", 0, "Film", "Darius", ""],
+      "Degrassi:<br> The Next Generation(2001 - 2010)": ["ORlCtOcB0Pk", 590, "TV", "Manny Santos", "The Halo-Halo makes an appearance in this episode of Degrassi. Also, a debut to celebrate an 18th birthday - such a Filipino thing to do. Although, I've only been to a debut once and I was too young to make one of the 18s (maybe in the future)."],
+      "Slow Jam King(2004)": ["<img src=img/SlowJamKing.jpg height=390 width=640>", 0, "Film", "Jojo", ""],
+      "The Great Raid(2005)": ["_qTV4ZbEPOw", 0, "Film", "Captain Juan Pajota, Filipino guerillas", "This movie, compared to Bataan and Back To Bataan, contains highlights of the contributions Filipinos made in fighting against the Japanese. In particular, the video on the right shows Filipinos holding off Japanese forces."],
+      "Glee(2009 - 2015)": ["oTvxxrZ76Zo", 0, "TV", "Sunshine Corazon", "Cue flashback to: \"Do you understand the words that are coming out of my mouth?!\". "],
+      "Pretty Little Liars(2010 - Present)": ["CuwG82Hualk", 40, "TV", "Emily Fields", "Reminds me of that one time my Dad was waiting for me right after school. Of course, it was not because I was taking my mom's pills but rather cutting half a school day."],
+      "Grimm(2011 - Present)": ["SdtZocgm7xE", 0, "TV", "Sgt. Wu", "In this episode of Grimm, they deal with aswang which can be a wide variety of monster. I always remembered it as a vampire. As a horror enthusiast and a Filipino, it's nice to see this kind of episodes. Also, maybe if the food was a little saltier and a little more garlicky the aswang would not have attacked her (Just a thought)."],
+      "Superstore(2015 - Present)": ["Xg5q7onyaoE", 0, "TV", "Mateo", "Gay and Asian. A combination that is usually heavily discriminated against. What's cool about Mateo is he's actually a Filipino character played by a Filipino actor. Oh, about that fake crying, that's pretty great."],
+      "Crazy Ex-Girlfriend(2015 - Present)": ["6PkqKJELk1g", 1136, "TV", "Josh Chan", "This show has something pretty rare, an Asian guy as the love interest of the female lead. The episode to the left contains scenes of Filipinos celebrating Thanksgiving. It might also be the first time <i>Dinuguan</i> appeared on a TV show. I think I'm the only one in my family who does not eat <i>Dinuguan</i>."]
+  };
+</script>
+
+<div id="wrapper">
+<div id="player">
+</div>
+
+<div id="desc">
+<ul id="info">
+    <li id="medTitle"></li>
+    <li id="medYear"></li>
+    <li id="medType"></li>
+    <li id="medDesc"></li>
+    <li id="medInfo"></li>
+</ul>
+</div>
+</div>
+
+<div id="footer">
+<ul id="list">
+    <li class="nav" id="prev">Previous</li>
+    <li class="nav" id="next">Next</li>
+</ul>
+</div>
+
+</body>
+</html>
