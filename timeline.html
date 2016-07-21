@@ -7,17 +7,24 @@
   <link rel="stylesheet" href="timeline.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
   <script src="script.js"></script>
-  <style type="text/css">
-    body, html {
-      font-family: sans-serif;
-    }
-  </style>
 
 </head>
 <body>
 <h1 id="header">History of Filipinos in American Films and TV Shows</h1>
 
 <div id="visualization"></div>
+
+<div id="wrapper">
+    <div id="player"></div>
+
+    <div id="footer">
+        <ul id="list">
+            <li class="nav" id="prev">Previous</li>
+            <li class="nav" id="next">Next</li>
+        </ul>
+    </div>
+</div>
+
 <script type="text/javascript">
   var tag = document.createElement('script');
   var loaded = false;
@@ -195,14 +202,6 @@
       window.scrollTo(0,document.body.scrollHeight);
   }
 
-  function setInfo(){
-      document.getElementById('medTitle').innerHTML = title.substring(0, title.indexOf("("));
-      document.getElementById('medYear').innerHTML = year;
-      document.getElementById('medType').innerHTML = videos[title][2];
-      document.getElementById('medDesc').innerHTML = videos[title][3];
-      document.getElementById('medInfo').innerHTML = videos[title][4];
-  }
-
   function onPlayerReady(event){
       player.cueVideoById(vidId, vidStart);
   }
@@ -211,64 +210,44 @@
 
   function playVideo(vidId, vidStart){
       var isIMG = vidId.indexOf("<img src");
-      setInfo();
       document.getElementById('player').style.display = 'block';
-      if(vidId !== undefined && vidId !== "" && loaded == false && isIMG == -1){
-          tag.src = "https://www.youtube.com/iframe_api";
-          var firstScriptTag = document.getElementsByTagName('script')[0];
-          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      }else if(vidId !== undefined && vidId !== "" && loaded == true && isIMG == -1){
-          player.cueVideoById(vidId, vidStart);
-          document.getElementById('player').scrollIntoView();
+      if(vidId !== undefined && vidId !== "" && isIMG == -1){
+          if(loaded == false){
+              tag.src = "https://www.youtube.com/iframe_api";
+              var firstScriptTag = document.getElementsByTagName('script')[0];
+              firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+          }else{
+              player.cueVideoById(vidId, vidStart);
+              document.getElementById('player').scrollIntoView();
+          }
       }else{
           document.getElementById('player').style.display = 'none';
+          window.alert("This current video is unavailable. You can still navigate using the next and previous");
       }
       timeline.moveTo(year);
   }
 
   var videos = {
-      "The Real Glory(1939)": ["hJYqoHwzGDM", 0, "Film", "Miguel, Alipang, Moros, Philippine Constabulary", "This movie was highly criticized by President Manuel Quezon for its portrayal of Moros as bloodthirsty savages as well as the portrayal of Filipinos as cowards."],
-      "Bataan(1943)": ["I1r_Q2HAstA", 0, "Film", "Private \"Yankee\" Salazar, Corporal Juan Katigbak", "Filipinos in this movie were not portrayed as bloodthirsty and cowards. The problem however, is that despite the Philippines being 4 years away from their independence, the movie doesn't portray it as such. It portrays the Philippines as being dependent upon the US."],
-      "Back To Bataan(1945)": ["g9mgHN26V_o", 0, "Film", "Captain Andres Bonifacio, Maximo Cuenca", "In this film, a Filipino, Andres Bonifacio, is actually in the center of the action. Just like Bataan, however, it falls prey to potraying Filipinos as inferior and too dependent upon the US."],
-      "Reflections In A Golden Eye(1967)": ["sFZTGloFss0", 0, "Film", "Anacleto", "In this movie, Anacleto, played by Zorro David, is an effeminate houseboy described by TCM as having an \"almost pathological devotion to Mrs. Langdon.\". The scene on the right shows his wonderful acting skills."],
-      "Star Trek: The Motion Picture(1979)": ["PPUdrMzvxrc", 0, "Film", "Hikaru Sulu", "Perhaps not many people will know that Hikaru Sulu is of mixed decent. I didn't. He actually got his last name from Sulu province in the Philippines."],
-      "Barney And Friends(1992 - 1996)": ["gxDRftW6-EU", 0, "TV", "Min", "Come to think of it, I don't remember the last time I, or anyone I know, sang Happy Birthday in Tagalog. For long as I can remember, I've always sung it in English."],
-      "Starship Troopers(1997)": ["ji7fiMU2s-k", 0, "Film", "Johnny Rico", "In the movie, Johnny Rico is said to be from Buenos Aires. However, in the original novel, he actually is Filipino"],
-      "City Guys(1997 - 2001)": ["mcTccRjbdGc", 480, "TV", "Alberto \"Al Rocket\" Ramos", ""],
-      "The Debut(2000)": ["EHeLAYmRfkM", 0, "Film", "Ben Mercado", "This film shows how Filipinos would try to negotiate their identity as another, then being misrecognized as anything but Filipino, then finally reclaiming the Filipino identity. Ben wanting to be more white and Gusto, Ben's love interest's ex boyfriend, wanting to be black portrays how Filipinos would negotiate their identities between either white or black."],
-      "The Flip Side(2001)": ["<img src=img/SlowJamKing.jpg height=390 width=640>", 0, "Film", "Darius", ""],
-      "Degrassi:<br> The Next Generation(2001 - 2010)": ["ORlCtOcB0Pk", 590, "TV", "Manny Santos", "The Halo-Halo makes an appearance in this episode of Degrassi. Also, a debut to celebrate an 18th birthday - such a Filipino thing to do. Although, I've only been to a debut once and I was too young to make one of the 18s (maybe in the future)."],
-      "Slow Jam King(2004)": ["<img src=img/SlowJamKing.jpg height=390 width=640>", 0, "Film", "Jojo", ""],
-      "The Great Raid(2005)": ["_qTV4ZbEPOw", 0, "Film", "Captain Juan Pajota, Filipino guerillas", "This movie, compared to Bataan and Back To Bataan, contains highlights of the contributions Filipinos made in fighting against the Japanese. In particular, the video on the right shows Filipinos holding off Japanese forces."],
-      "Glee(2009 - 2015)": ["oTvxxrZ76Zo", 0, "TV", "Sunshine Corazon", "Cue flashback to: \"Do you understand the words that are coming out of my mouth?!\". "],
-      "Pretty Little Liars(2010 - Present)": ["CuwG82Hualk", 40, "TV", "Emily Fields", "Reminds me of that one time my Dad was waiting for me right after school. Of course, it was not because I was taking my mom's pills but rather cutting half a school day."],
-      "Grimm(2011 - Present)": ["SdtZocgm7xE", 0, "TV", "Sgt. Wu", "In this episode of Grimm, they deal with aswang which can be a wide variety of monster. I always remembered it as a vampire. As a horror enthusiast and a Filipino, it's nice to see this kind of episodes. Also, maybe if the food was a little saltier and a little more garlicky the aswang would not have attacked her (Just a thought)."],
-      "Superstore(2015 - Present)": ["Xg5q7onyaoE", 0, "TV", "Mateo", "Gay and Asian. A combination that is usually heavily discriminated against. What's cool about Mateo is he's actually a Filipino character played by a Filipino actor. Oh, about that fake crying, that's pretty great."],
-      "Crazy Ex-Girlfriend(2015 - Present)": ["6PkqKJELk1g", 1136, "TV", "Josh Chan", "This show has something pretty rare, an Asian guy as the love interest of the female lead. The episode to the left contains scenes of Filipinos celebrating Thanksgiving. It might also be the first time <i>Dinuguan</i> appeared on a TV show. I think I'm the only one in my family who does not eat <i>Dinuguan</i>."]
+      "The Real Glory(1939)": ["hJYqoHwzGDM", 0, "Film", "Miguel, Alipang, Moros, Philippine Constabulary"],
+      "Bataan(1943)": ["I1r_Q2HAstA", 0, "Film", "Private \"Yankee\" Salazar, Corporal Juan Katigbak"],
+      "Back To Bataan(1945)": ["g9mgHN26V_o", 0, "Film", "Captain Andres Bonifacio, Maximo Cuenca"],
+      "Reflections In A Golden Eye(1967)": ["sFZTGloFss0", 0, "Film", "Anacleto"],
+      "Star Trek: The Motion Picture(1979)": ["PPUdrMzvxrc", 0, "Film", "Hikaru Sulu"],
+      "Barney And Friends(1992 - 1996)": ["gxDRftW6-EU", 0, "TV", "Min"],
+      "Starship Troopers(1997)": ["ji7fiMU2s-k", 0, "Film", "Johnny Rico"],
+      "City Guys(1997 - 2001)": ["mcTccRjbdGc", 480, "TV", "Alberto \"Al Rocket\" Ramos"],
+      "The Debut(2000)": ["EHeLAYmRfkM", 0, "Film", "Ben Mercado"],
+      "The Flip Side(2001)": ["<img src=img/SlowJamKing.jpg height=390 width=640>", 0, "Film", "Darius"],
+      "Degrassi:<br> The Next Generation(2001 - 2010)": ["ORlCtOcB0Pk", 590, "TV", "Manny Santos"],
+      "Slow Jam King(2004)": ["<img src=img/SlowJamKing.jpg height=390 width=640>", 0, "Film", "Jojo"],
+      "The Great Raid(2005)": ["_qTV4ZbEPOw", 0, "Film", "Captain Juan Pajota, Filipino guerillas"],
+      "Glee(2009 - 2015)": ["oTvxxrZ76Zo", 0, "TV", "Sunshine Corazon"],
+      "Pretty Little Liars(2010 - Present)": ["CuwG82Hualk", 40, "TV", "Emily Fields"],
+      "Grimm(2011 - Present)": ["SdtZocgm7xE", 0, "TV", "Sgt. Wu"],
+      "Superstore(2015 - Present)": ["Xg5q7onyaoE", 0, "TV", "Mateo"],
+      "Crazy Ex-Girlfriend(2015 - Present)": ["6PkqKJELk1g", 1136, "TV", "Josh Chan"]
   };
 </script>
-
-<div id="wrapper">
-<div id="player">
-</div>
-
-<div id="desc">
-<ul id="info">
-    <li id="medTitle"></li>
-    <li id="medYear"></li>
-    <li id="medType"></li>
-    <li id="medDesc"></li>
-    <li id="medInfo"></li>
-</ul>
-</div>
-</div>
-
-<div id="footer">
-<ul id="list">
-    <li class="nav" id="prev">Previous</li>
-    <li class="nav" id="next">Next</li>
-</ul>
-</div>
 
 </body>
 </html>
