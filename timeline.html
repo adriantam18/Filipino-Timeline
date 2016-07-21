@@ -16,11 +16,18 @@
 
 <div id="wrapper">
     <div id="player"></div>
-
-    <div id="footer">
+    <div id="navigate">
         <ul id="list">
             <li class="nav" id="prev">Previous</li>
             <li class="nav" id="next">Next</li>
+        </ul>
+    </div>
+
+    <div id="desc">
+        <ul id="desc-list">
+            <li id="vid-title"></li>
+            <li id="vid-type"></li>
+            <li id="vid-desc"></li>
         </ul>
     </div>
 </div>
@@ -34,108 +41,108 @@
   var items = new vis.DataSet([
     {
         id: 1,
-        content: "<p class=title>The Real Glory(1939)</p>" +
+        content: "<p class=title id=1>The Real Glory(1939)</p>" +
                  "<img class=thumbnail src=img/TheRealGlory.jpg>",
         start: "1939"
     },
     {
         id: 2,
-        content: "<p class=title>Bataan(1943)</p>" +
+        content: "<p class=title id=2>Bataan(1943)</p>" +
                  "<img class=thumbnail src=img/Bataan.jpeg>",
         start: "1943"
     },
     {
         id: 3,
-        content: "<p class=title>Back To Bataan(1945)</p>" +
+        content: "<p class=title id=3>Back To Bataan(1945)</p>" +
                  "<img class=thumbnail src=img/BackToBataan.jpg>",
         start: "1945"
     },
     {
         id: 4,
-        content: "<p class=title>Reflections In A Golden Eye(1967)</p>" +
+        content: "<p class=title id=4>Reflections In A Golden Eye(1967)</p>" +
                  "<img class=thumbnail src=img/ReflectionsInAGoldenEye.jpg>",
         start: "1967"
     },
     {
         id: 5,
-        content: "<p class=title>Star Trek: The Motion Picture(1979)</p>" +
+        content: "<p class=title id=5>Star Trek: The Motion Picture(1979)</p>" +
                  "<img class=thumbnail src=img/StarTrekTheMotionPicture.png>",
         start: "1979"
     },
     {
         id: 6,
-        content: "<p class=title>Barney And Friends(1992 - 1996)</p>" +
+        content: "<p class=title id=6>Barney And Friends(1992 - 1996)</p>" +
                  "<img class=thumbnail src=img/BarneyAndFriends.jpg>",
         start: "1992",
     },
     {
         id: 7,
-        content: "<p class=title>Starship Troopers(1997)</p>" +
+        content: "<p class=title id=7>Starship Troopers(1997)</p>" +
                  "<img class=thumbnail src=img/StarshipTroopers.jpg>",
         start: "1997"
     },
     {
         id: 8,
-        content: "<p class=title>City Guys(1997 - 2001)</p>" +
+        content: "<p class=title id=8>City Guys(1997 - 2001)</p>" +
                  "<img class=thumbnail src=img/CityGuys.jpg>",
         start: "1997"
     },
     {
         id: 9,
-        content: "<p class=title>The Debut(2000)</p>" +
+        content: "<p class=title id=9>The Debut(2000)</p>" +
                  "<img class=thumbnail src=img/TheDebut.jpg>",
         start: "2000"
     },
     {
         id: 10,
-        content: "<p class=title>The Flip Side(2001)</p>",
+        content: "<p class=title id=10>The Flip Side(2001)</p>",
         start: "2001"
     },
     {
         id: 11,
-        content: "<p class=title>Degrassi:<br> The Next Generation(2001 - 2010)</p>" +
+        content: "<p class=title id=11>Degrassi:<br> The Next Generation(2001 - 2010)</p>" +
                  "<img class=thumbnail src=img/DegrassiTNG.PNG>",
         start: "2001"
     },
     {
         id: 12,
-        content: "<p class=title>Slow Jam King(2004)</p>" +
+        content: "<p class=title id=12>Slow Jam King(2004)</p>" +
                  "<img class=thumbnail src=img/SlowJamKing.jpg>",
         start: "2004"
     },
     {
         id: 13,
-        content: "<p class=title>The Great Raid(2005)</p>" +
+        content: "<p class=title id=13>The Great Raid(2005)</p>" +
                  "<img class=thumbnail src=img/TheGreatRaid.jpg>",
         start: "2005"
     },
     {
         id: 14,
-        content: "<p class=title>Glee(2009 - 2015)</p>" +
+        content: "<p class=title id=14>Glee(2009 - 2015)</p>" +
                  "<img class=thumbnail src=img/Glee.png>",
         start: "2009"
     },
     {
         id: 15,
-        content: "<p class=title>Pretty Little Liars(2010 - Present)</p>" +
+        content: "<p class=title id=15>Pretty Little Liars(2010 - Present)</p>" +
                  "<img class=thumbnail src=img/PrettyLittleLiars.jpg>",
         start: "2010"
     },
     {
         id: 16,
-        content: "<p class=title>Grimm(2011 - Present)</p>" +
+        content: "<p class=title id=16>Grimm(2011 - Present)</p>" +
                  "<img class=thumbnail src=img/Grimm.jpg>",
         start: "2011"
     },
     {
         id: 17,
-        content: "<p class=title>Superstore(2015 - Present)</p>" +
+        content: "<p class=title id=17>Superstore(2015 - Present)</p>" +
                  "<img class=thumbnail src=img/superstore.jpg>",
         start: "2015"
     },
     {
         id: 18,
-        content: "<p class=title>Crazy Ex-Girlfriend(2015 - Present)</p>" +
+        content: "<p class=title id=18>Crazy Ex-Girlfriend(2015 - Present)</p>" +
                  "<img class=thumbnail src=img/CrazyExGirlfriend.jpg>",
         start: "2015"
     }
@@ -168,19 +175,12 @@
 
   var title, year;
   function setIdAndStart(item){
-      var data = items._data;
+      var data = items._data
       var entry = data[item];
-      title = extractTitle(entry["content"]);
+      title = document.getElementById(entry['id']).innerHTML;
       year = entry["start"];
       vidId = videos[title][0];
       vidStart = videos[title][1];
-  }
-
-  function extractTitle(content){
-      var pos = content.indexOf(">");
-      var last = content.indexOf(")<");
-      var ret = content.substring(pos + 1, last + 1);
-      return ret;
   }
 
   var player;
@@ -198,8 +198,14 @@
       loaded = true;
       document.getElementById('player').scrollIntoView();
       document.getElementById('list').style.display = 'inline';
-      document.getElementById('info').style.display = 'inline';
+      document.getElementById('desc-list').style.display = 'inline';
       window.scrollTo(0,document.body.scrollHeight);
+  }
+
+  function setVidInfo(){
+     document.getElementById('vid-title').innerHTML = title;
+     document.getElementById('vid-type').innerHTML = videos[title][2];
+     document.getElementById('vid-desc').innerHTML = videos[title][3];
   }
 
   function onPlayerReady(event){
@@ -210,6 +216,7 @@
 
   function playVideo(vidId, vidStart){
       var isIMG = vidId.indexOf("<img src");
+      setVidInfo();
       document.getElementById('player').style.display = 'block';
       if(vidId !== undefined && vidId !== "" && isIMG == -1){
           if(loaded == false){
