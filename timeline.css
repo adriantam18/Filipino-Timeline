@@ -85,17 +85,3 @@ body{
     margin: 25px;
     float: left;
 }
-
-#desc{
-    margin-left: 25px;
-}
-
-#info{
-    display: none;
-}
-
-#info li{
-    font-size: 24px;
-    list-style-type: disc;
-    margin-bottom: 10px;
-}
