@@ -43,13 +43,7 @@ body{
     margin-bottom: 5px;
 }
 
-#footer{
-    /*
-    text-align: center;
-    position: sticky;
-    vertical-align: bottom;
-    bottom: 0;
-    */
+#navigate{
     clear:both;
     text-align:left;
     margin: 5px;
@@ -78,10 +72,24 @@ body{
 
 #wrapper{
     width: 100%;
+    float: left;
     overflow: hidden;
 }
 
 #player{
     margin: 25px;
-    float: left;
+}
+
+#desc{
+    margin-left: 25px;
+}
+
+#desc-list{
+    display: none;
+}
+
+#desc-list li{
+    font-size: 24px;
+    list-style-type: disc;
+    margin-bottom: 10px;
 }
