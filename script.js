@@ -1,21 +1,23 @@
 $(function(){
     $("#next").click(function(){
-        var next = curr + 1;
+        var next = currIndex + 1;
         if(next <= items.length){
-            setIdAndStart(next);
-            curr = next;
-            playVideo(vidId, vidStart);
+            var entry = getEntry(next);
+            currIndex = next;
+            playVideo(entry);
+            setVidInfo(entry);
         }else{
             alert("You've reached the end");
         }
     })
 
     $("#prev").click(function(){
-        var prev = curr - 1;
+        var prev = currIndex - 1;
         if(prev >= 1){
-            setIdAndStart(prev);
-            curr = prev;
-            playVideo(vidId, vidStart);
+            var entry = getEntry(prev);
+            currIndex = prev;
+            playVideo(entry);
+            setVidInfo(entry);
         }else{
             alert("You've reached the end");
         }
